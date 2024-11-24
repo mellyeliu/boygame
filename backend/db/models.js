@@ -1,8 +1,12 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
+const environment = process.env.NODE_ENV || "development";
+const isTest = environment === "test";
+
 const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: "game.db",
+  storage: isTest ? ":memory:" : "game.db",
+  logging: isTest ? false : console.log,
 });
 
 const Room = sequelize.define("Room", {
@@ -12,15 +16,45 @@ const Room = sequelize.define("Room", {
 const Player = sequelize.define("Player", {
   name: { type: DataTypes.STRING, allowNull: false },
   score: { type: DataTypes.INTEGER, defaultValue: 0 },
-  facts: { type: DataTypes.JSON, allowNull: true },
+});
+
+const Fact = sequelize.define(
+  "Fact",
+  {
+    category: {
+      type: DataTypes.ENUM("virtue", "vice", "trade", "tidbit"),
+      allowNull: false,
+    },
+    value: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ["authorId", "value"],
+      },
+    ],
+  }
+);
+
+const Boy = sequelize.define("Boy", {
+  name: { type: DataTypes.STRING, allowNull: false },
 });
 
 Room.hasMany(Player);
 Player.belongsTo(Room);
 
+Player.hasMany(Fact, { as: "authoredFacts" });
+Fact.belongsTo(Player, { as: "author" });
+
+Boy.hasMany(Fact);
+Fact.belongsTo(Boy);
+
 async function initDb() {
-  await sequelize.sync();
-  console.log("Database synced");
+  await sequelize.sync({ force: true });
 }
 
-module.exports = { sequelize, Room, Player, initDb };
+module.exports = { sequelize, Room, Player, Fact, Boy, initDb };

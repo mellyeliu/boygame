@@ -24,7 +24,12 @@ async function listRooms() {
   const rooms = await Room.findAll({
     include: { model: Player, attributes: ["name", "score"] },
   });
-  return rooms;
+
+  return rooms.map((room) => ({
+    roomCode: room.code,
+    playerCount: room.players.length,
+    players: room.players,
+  }));
 }
 
 module.exports = { joinRoom, listRooms };
