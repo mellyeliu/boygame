@@ -1,5 +1,5 @@
 const { sequelize, Room, Player } = require("../../db/models");
-const { joinRoom } = require("../roomService");
+const { joinRoom, createRoom } = require("../roomService");
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
@@ -9,77 +9,78 @@ afterAll(async () => {
   await sequelize.close();
 });
 
+describe("Room Service - createRoom", () => {
+  beforeEach(async () => {
+    await Room.destroy({ where: {} });
+  });
+
+  test("should create a room with a unique 4-character code", async () => {
+    const room = await createRoom();
+
+    expect(room.code).toHaveLength(4);
+    const rooms = await Room.findAll();
+    expect(rooms.length).toBe(1);
+    expect(rooms[0].code).toBe(room.code);
+  });
+
+  test("should not create duplicate room codes", async () => {
+    const room1 = await createRoom();
+    const room2 = await createRoom();
+
+    expect(room1.code).not.toBe(room2.code);
+
+    const rooms = await Room.findAll();
+    expect(rooms.length).toBe(2);
+  });
+});
+
 describe("Room Service - joinRoom", () => {
   beforeEach(async () => {
     await Room.destroy({ where: {} });
     await Player.destroy({ where: {} });
   });
 
-  test("should create a new room if it does not exist", async () => {
-    const result = await joinRoom("ROOM1", "Alice");
+  test("should allow a player to join an existing room", async () => {
+    const room = await createRoom(); // Create a room using the createRoom function
+    const result = await joinRoom(room.code, "Alice");
 
-    expect(result.room.code).toBe("ROOM1");
+    expect(result.room.code).toBe(room.code);
     expect(result.player.name).toBe("Alice");
 
-    const rooms = await Room.findAll();
-    expect(rooms.length).toBe(1);
-    expect(rooms[0].code).toBe("ROOM1");
-
-    const players = await Player.findAll();
+    const players = await Player.findAll({ where: { RoomId: room.id } });
     expect(players.length).toBe(1);
     expect(players[0].name).toBe("Alice");
   });
 
-  test("should allow a player to join an existing room", async () => {
-    const room = await Room.create({ code: "ROOM1" });
-    const player1 = await Player.create({ name: "Alice", RoomId: room.id });
+  test("should not allow duplicate players to join the same room", async () => {
+    const room = await createRoom(); // Create a room
+    await joinRoom(room.code, "Alice");
 
-    const result = await joinRoom("ROOM1", "Bob");
-
-    expect(result.room.id).toBe(room.id);
-    expect(result.player.name).toBe("Bob");
-
-    const players = await Player.findAll({ where: { RoomId: room.id } });
-    expect(players.length).toBe(2);
-    expect(players.map((p) => p.name)).toContain("Alice");
-    expect(players.map((p) => p.name)).toContain("Bob");
-  });
-
-  test("should not allow the same player to join the same room twice", async () => {
-    const room = await Room.create({ code: "ROOM1" });
-    await Player.create({ name: "Alice", RoomId: room.id });
-
-    await expect(joinRoom("ROOM1", "Alice")).rejects.toThrow(
+    await expect(joinRoom(room.code, "Alice")).rejects.toThrow(
       "Player already exists in this room"
     );
 
     const players = await Player.findAll({ where: { RoomId: room.id } });
     expect(players.length).toBe(1);
+    expect(players[0].name).toBe("Alice");
   });
 
-  test("should create multiple rooms independently", async () => {
-    await joinRoom("ROOM1", "Alice");
-    await joinRoom("ROOM2", "Bob");
+  test("should throw an error if the room code does not exist", async () => {
+    await expect(joinRoom("FAKE", "Alice")).rejects.toThrow("Room not found");
 
     const rooms = await Room.findAll();
-    expect(rooms.length).toBe(2);
-    expect(rooms.map((r) => r.code)).toContain("ROOM1");
-    expect(rooms.map((r) => r.code)).toContain("ROOM2");
-
-    const players = await Player.findAll();
-    expect(players.length).toBe(2);
+    expect(rooms.length).toBe(0);
   });
 
-  test("should handle case where room code is reused but with different players", async () => {
-    const result1 = await joinRoom("ROOM1", "Alice");
-    const result2 = await joinRoom("ROOM1", "Bob");
+  test("should allow multiple players to join the same room", async () => {
+    const room = await createRoom(); // Create a room
+    const player1 = await joinRoom(room.code, "Alice");
+    const player2 = await joinRoom(room.code, "Bob");
 
-    expect(result1.room.id).toBe(result2.room.id);
-    expect(result1.room.code).toBe("ROOM1");
+    expect(player1.room.code).toBe(room.code);
+    expect(player2.room.code).toBe(room.code);
 
-    const players = await Player.findAll({
-      where: { RoomId: result1.room.id },
-    });
+    const players = await Player.findAll({ where: { RoomId: room.id } });
     expect(players.length).toBe(2);
     expect(players.map((p) => p.name)).toContain("Alice");
     expect(players.map((p) => p.name)).toContain("Bob");

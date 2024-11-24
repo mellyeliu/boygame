@@ -1,9 +1,34 @@
 const { Room, Player } = require("../db/models");
 
+function generateRoomCode() {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let code = "";
+  for (let i = 0; i < 4; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+}
+
+async function createRoom() {
+  let isUnique = false;
+  let room;
+
+  while (!isUnique) {
+    const generatedCode = generateRoomCode();
+    const existingRoom = await Room.findOne({ where: { code: generatedCode } });
+    if (!existingRoom) {
+      room = await Room.create({ code: generatedCode });
+      isUnique = true;
+    }
+  }
+
+  return room;
+}
+
 async function joinRoom(roomCode, playerName) {
   let room = await Room.findOne({ where: { code: roomCode } });
   if (!room) {
-    room = await Room.create({ code: roomCode });
+    throw new Error("Room not found");
   }
 
   const playerCount = await Player.count({ where: { RoomId: room.id } });
@@ -32,4 +57,4 @@ async function listRooms() {
   }));
 }
 
-module.exports = { joinRoom, listRooms };
+module.exports = { createRoom, joinRoom, listRooms };

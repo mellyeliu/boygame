@@ -4,6 +4,15 @@ const { submitFact, getPlayerFacts } = require("../services/factService");
 const { getLeaderboard } = require("../services/leaderboardService");
 const router = express.Router();
 
+router.post("/start-game", async (req, res) => {
+  try {
+    const room = await createRoom();
+    res.send({ roomCode: room.code });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
 router.post("/join-room", async (req, res) => {
   const { roomCode, playerName } = req.body;
   try {
