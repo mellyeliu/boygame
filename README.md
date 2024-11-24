@@ -17,7 +17,7 @@ To run the test suite, run  `npm test`.
 
 ## Frontend Setup
 
-Navigate to the `backend` folder and run the following commands:
+Navigate to the `frontend` folder and run the following commands:
 
 ```bash
 cd frontend
