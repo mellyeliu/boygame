@@ -1,6 +1,7 @@
 # BOY♡GAME
 
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/9f6d38c9-8d89-421d-b150-aee9bd35d459">
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/ff791471-ef05-469b-9039-abaf940031a2">
+
 
 
 ## Backend Setup
