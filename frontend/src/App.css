@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: "Candy Darling";
+  src: url("./assets/fonts/CandyDarling-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}

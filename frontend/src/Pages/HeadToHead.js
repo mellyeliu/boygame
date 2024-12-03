@@ -1,5 +1,6 @@
 import React from "react";
-import Character from "../Components/Character"; // Assuming you already have a Character component
+import Character from "../Components/Character";
+import Timer from "../Components/Timer";
 
 const styles = {
   container: {
@@ -19,7 +20,7 @@ const styles = {
     zIndex: 10,
     display: "flex",
     position: "absolute",
-    top: "35%", // Place above the VS text
+    top: "20%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     flexDirection: "column",
@@ -30,6 +31,9 @@ const styles = {
     fontSize: "24px",
     fontWeight: "bold",
     color: "#333",
+    top: "0%",
+    left: "50%",
+    transform: "translate(0%, -50%)",
   },
   subtitle: {
     fontSize: "17.5px",
@@ -74,10 +78,11 @@ const styles = {
 const HeadToHead = () => {
   return (
     <div style={styles.container}>
-      {/* Left Character */}
       <div style={styles.characterContainer}>
         <Character
-          image="/path/to/character1.png" // Replace with actual image paths
+          dir="left"
+          name="Troye"
+          image="/img/boys/finn.png"
           traits={[
             { type: "Virtue", text: "Helps grandma cross the street" },
             { type: "Vice", text: "Helps grandma cross the street" },
@@ -87,10 +92,10 @@ const HeadToHead = () => {
         />
       </div>
 
-      {/* Middle Section */}
       <div style={styles.middleContainer}>
-        {/* <div style={styles.timer}>00:30</div> */}
-        {/* <img style={styles.mainTitle} src="img/question.svg" /> */}
+        <div style={styles.timer}>
+          <Timer />
+        </div>
         <div style={styles.subtitle}>The boys are asking</div>
         <div style={styles.mainTitle}>Would you like to go on a date?</div>
         <div style={{ marginTop: "-60px", ...styles.subtitle }}>
@@ -99,10 +104,11 @@ const HeadToHead = () => {
       </div>
       <div style={styles.vsText}>VS</div>
 
-      {/* Right Character */}
       <div style={styles.characterContainer}>
         <Character
-          image="/path/to/character2.png" // Replace with actual image paths
+          dir="right"
+          name="Hunter"
+          image="/img/boys/hunter.png"
           traits={[
             { type: "Virtue", text: "Helps grandma cross the street" },
             { type: "Vice", text: "Helps grandma cross the street" },
