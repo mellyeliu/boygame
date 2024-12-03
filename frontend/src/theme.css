@@ -1,0 +1,14 @@
+:root {
+  --virtue-bg-color: #ffe3ef;
+  --vice-bg-color: #efe3ff;
+  --tidbit-bg-color: #e3f2ff;
+  --trade-bg-color: #e3fff2;
+  --virtue-color: #ff2684;
+  --vice-color: #9747ff;
+  --tidbit-color: #209aff;
+  --trade-color: #1bc16f;
+
+  --card-shadow: 0px 4px 16px rgba(255, 51, 124, 0.8);
+
+  --desktop-character-width: 300px;
+}
