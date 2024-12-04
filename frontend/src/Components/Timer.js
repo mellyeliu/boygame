@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 
 const CountdownCircle = ({
   duration = 30,
-  size = 60,
-  strokeWidth = 1,
+  sizeVH = 6, // Size as a percentage of viewport height
   color = "black",
   backgroundColor = "#ccc",
 }) => {
   const [timeLeft, setTimeLeft] = useState(duration);
+
+  // Convert vh values to pixels
+  const size = window.innerHeight * (sizeVH / 100); // Size in pixels based on vh
+  const strokeWidth = 0.001 * window.innerHeight; // Stroke width in pixels based on vh
 
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;

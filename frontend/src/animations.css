@@ -1,0 +1,20 @@
+@keyframes drift {
+  0% {
+    transform: translate(0vw, 0vh) rotate(0deg);
+  }
+  20% {
+    transform: translate(1vw, -1vh) rotate(5deg);
+  }
+  40% {
+    transform: translate(-2vw, 0vh) rotate(-5deg);
+  }
+  60% {
+    transform: translate(-1vw, 1vh) rotate(-10deg);
+  }
+  80% {
+    transform: translate(2vw, -2vh) rotate(10deg);
+  }
+  100% {
+    transform: translate(0vw, 0vh) rotate(0deg);
+  }
+}

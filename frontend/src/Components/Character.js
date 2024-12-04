@@ -9,25 +9,32 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     gap: "16px",
+    height: "75vh",
+    justifyContent: "center", // Center character and traits vertically
   },
   characterImage: {
-    maxWidth: "var(--desktop-character-width)",
+    minHeight: "50vh",
+    width: "auto",
     boxShadow: "var(--card-shadow)",
-    borderRadius: "8px",
+    borderRadius: "1vh",
   },
   characterText: {
     fontFamily: "Candy Darling, sans-serif",
-    fontSize: "104px",
+    fontSize: "clamp(3rem, 9vh, 30rem)",
     color: "var(--virtue-color)",
-    marginBottom: "-100px",
+    marginBottom: "-10vh",
     zIndex: 10,
     textShadow: `
-      -2.03px 2.03px 1.35px #FFD6E8, 
+      -0.5px 2.03px 1.35px #FFD6E8, 
       0px 0px 2.35px #2B1A21
     `,
   },
   traitsWrapper: {
-    marginTop: -50,
+    width: "100%",
+    height: "50%", // Traits span 50% of the 80% (10% per trait for 5 traits)
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
 };
 
@@ -43,7 +50,7 @@ const Character = ({ name, image, traits, dir }) => {
   };
 
   const getTextShift = (dir) => {
-    const shift = Math.random() * (80 - 60) + 60;
+    const shift = Math.random() * (10 - 5) + 5;
     return dir === "left" ? -shift : shift;
   };
 
@@ -53,7 +60,7 @@ const Character = ({ name, image, traits, dir }) => {
         style={{
           transform: `translateX(${getTextShift(
             dir
-          )}px) rotate(${getTextRotation(dir)}deg)`,
+          )}vw) rotate(${getTextRotation(dir)}deg)`,
 
           ...styles.characterText,
         }}
