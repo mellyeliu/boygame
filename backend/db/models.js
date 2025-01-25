@@ -18,27 +18,16 @@ const Player = sequelize.define("Player", {
   score: { type: DataTypes.INTEGER, defaultValue: 0 },
 });
 
-const Fact = sequelize.define(
-  "Fact",
-  {
-    category: {
-      type: DataTypes.ENUM("virtue", "vice", "trade", "tidbit"),
-      allowNull: false,
-    },
-    value: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+const Fact = sequelize.define("Fact", {
+  category: {
+    type: DataTypes.ENUM("virtue", "vice", "trade", "tidbit"),
+    allowNull: false,
   },
-  {
-    indexes: [
-      {
-        unique: true,
-        fields: ["authorId", "value"],
-      },
-    ],
-  }
-);
+  value: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
 const Boy = sequelize.define("Boy", {
   name: { type: DataTypes.STRING, allowNull: false },
@@ -54,7 +43,7 @@ Boy.hasMany(Fact);
 Fact.belongsTo(Boy);
 
 async function initDb() {
-  await sequelize.sync({ force: true });
+  await sequelize.sync();
 }
 
 module.exports = { sequelize, Room, Player, Fact, Boy, initDb };

@@ -65,7 +65,6 @@ const styles = {
     minWidth: "clamp(600px, 10vw, 2000px)",
     minHeight: "10vh",
     paddingTop: "2.5vh",
-    // lineHeight: "14vh",
   },
   vsText: {
     fontSize: "clamp(3rem, 5vh, 20rem)",
@@ -90,10 +89,9 @@ const styles = {
   },
 };
 
-const HeadToHead = () => {
+const HeadToHead = ({title}) => {
   return (
     <div style={styles.container}>
-      {/* Top Section with Characters */}
       <div style={styles.topContainer}>
         <div style={styles.characterContainer}>
           <Character
@@ -113,7 +111,7 @@ const HeadToHead = () => {
             <Timer sizeVH={6} />
           </div>
           <div style={styles.subtitle}>The boys are asking</div>
-          <div style={styles.mainTitle}>Would you like to go on a date?</div>
+          <div style={styles.mainTitle}>{title}</div>
           <div style={{ marginTop: "-5vh", ...styles.subtitle }}>
             Who would you pick?
           </div>
@@ -134,7 +132,6 @@ const HeadToHead = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div style={styles.bottomBar}>
         <Player name="Mel" image={"img/players/mel.png"} isActive={true} />
         <Player name="Verli" image={"img/players/verli.png"} />

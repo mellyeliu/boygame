@@ -2,7 +2,7 @@ const { UniqueConstraintError } = require("sequelize");
 
 const { Fact, Player } = require("../db/models");
 
-async function submitFact(playerName, factCategory, factValue) {
+async function submitFact(playerId, factCategory, factValue) {
   const validCategories = ["virtue", "vice", "trade", "tidbit"];
   if (!validCategories.includes(factCategory)) {
     throw new Error(`Invalid fact category: ${factCategory}`);
@@ -12,7 +12,7 @@ async function submitFact(playerName, factCategory, factValue) {
     throw new Error("Fact value cannot be empty");
   }
 
-  const player = await Player.findOne({ where: { name: playerName } });
+  const player = await Player.findOne({ where: { id: playerId } });
   if (!player) {
     throw new Error("Player not found");
   }

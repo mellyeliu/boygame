@@ -1,4 +1,5 @@
 const express = require("express");
+const { Player } = require("../db/models");
 const { joinRoom, listRooms } = require("../services/roomService");
 const { submitFact, getPlayerFacts } = require("../services/factService");
 const { getLeaderboard } = require("../services/leaderboardService");
@@ -10,6 +11,17 @@ router.post("/start-game", async (req, res) => {
     res.send({ roomCode: room.code });
   } catch (err) {
     res.status(500).send({ error: err.message });
+  }
+});
+
+router.post("/create-player", async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const player = await Player.create({ name });
+    res.status(201).send(player);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
   }
 });
 
@@ -34,10 +46,10 @@ router.get("/leaderboard", async (req, res) => {
 });
 
 router.post("/submit-fact", async (req, res) => {
-  const { playerName, factCategory, factValue } = req.body;
+  const { playerId, factCategory, factValue } = req.body;
 
   try {
-    const result = await submitFact(playerName, factCategory, factValue);
+    const result = await submitFact(playerId, factCategory, factValue);
     res.send(result);
   } catch (err) {
     res.status(400).send({ error: err.message });
