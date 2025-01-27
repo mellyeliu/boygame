@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Timer from "./Timer";
+import Timer from "../Timer";
 
 const TRAIT_TYPES = {
   virtue: {

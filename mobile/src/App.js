@@ -1,7 +1,7 @@
 import './App.css';
 import './fonts.css'
-import TraitComposer from './Components/TraitComposer';
-import CharacterComposer from './Components/CharacterComposer';
+import TraitComposer from './Components/Pages/TraitComposer';
+import CharacterComposer from './Components/Pages/CharacterComposer';
 
 function App() {
   return (
