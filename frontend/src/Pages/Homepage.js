@@ -23,7 +23,7 @@ const Homepage = () => {
 
   const buttonStyle = {
     position: "absolute",
-    top: "76%",
+    top: "73%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     padding: "2vh 4vh",
@@ -35,13 +35,20 @@ const Homepage = () => {
     fontFamily: "Syne Mono, sans-serif",
     boxShadow: "white -7px 7px 6px inset, #A8466F 7px -7px 6px inset",
     cursor: "pointer",
+    transition: "transform 0.2s ease",
   };
 
   return (
     <div style={containerStyle}>
       <div style={imageWrapperStyle}>
         <img src="/img/home.png" alt="Title Screen" style={imageStyle} />
-        <button style={buttonStyle}>START</button>
+        <button
+          style={buttonStyle}
+          onMouseEnter={(e) => (e.target.style.transform = "translate(-50%, -50%) scale(1.05)")}
+          onMouseLeave={(e) => (e.target.style.transform = "translate(-50%, -50%)")}
+        >
+          START
+        </button>
       </div>
     </div>
   );
