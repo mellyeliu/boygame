@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Timer from "../Timer";
+import { motion } from "framer-motion";
 
 const TRAIT_TYPES = {
   virtue: {
     title: "Think of a virtue",
-    subtitle: "What’s a green flag in someone? Maybe they’re a cyclist and recyclist, or they read poetry to their cat.",
+    subtitle:
+      "What’s a green flag in someone? Maybe they’re a cyclist and recyclist, or they read poetry to their cat.",
     gif: "trait-icons/virtue.png",
     suggestions: [
       "Makes a fan website for you",
@@ -127,37 +129,100 @@ const styles = {
 
 const TraitComposer = ({ type = "virtue" }) => {
   const [inputValue, setInputValue] = useState("");
+  const [animateOut, setAnimateOut] = useState(false);
+  const [showBlackScreen, setShowBlackScreen] = useState(false);
+  console.log(showBlackScreen);
+  const handleSubmit = () => {
+    setAnimateOut(true);
+    setTimeout(() => {
+      setShowBlackScreen(true);
+    }, 1000);
+  };
 
   const trait = TRAIT_TYPES[type] || TRAIT_TYPES.virtue;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.timerWrapper}>
-        <Timer sizeVH="4" />
-      </div>
-      <img src={trait.gif} alt={`${type} gif`} style={styles.gif} />
-      <div style={styles.title}>{trait.title}</div>
-      <div style={styles.subtitle}>{trait.subtitle}</div>
-      <textarea
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder=""
-        style={styles.textarea}
-      />
-      <button style={styles.button}>Submit</button>
-      <p
-        style={styles.suggestion}
-        onClick={() =>
-          setInputValue(
-            trait.suggestions[
-              Math.floor(Math.random() * trait.suggestions.length)
-            ]
-          )
-        }
-      >
-        Think of one for me°•💭
-      </p>
+    <div style={{ backgroundColor: "black" }}>
+      {!showBlackScreen ? (
+        <motion.div
+          initial={{ scale: 1, y: 0 }}
+          animate={
+            animateOut
+              ? { scale: 0.1, y: "-100vh", opacity: 0 }
+              : { scale: 1, y: 0 }
+          }
+          transition={{ duration: 1, ease: "easeInOut" }}
+          style={{
+            width: "100vw",
+            height: "100vh",
+            background: "url('/mobile-bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "top",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            color: "white",
+            fontFamily: "Xanh Mono, sans-serif",
+            overflow: "hidden",
+          }}
+        >
+          <div style={styles.container}>
+            <div style={styles.timerWrapper}>
+              <Timer sizeVH="4" />
+            </div>
+            <img src={trait.gif} alt={`${type} gif`} style={styles.gif} />
+            <div style={styles.title}>{trait.title}</div>
+            <div style={styles.subtitle}>{trait.subtitle}</div>
+            <textarea
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder=""
+              style={styles.textarea}
+            />
+            <button onClick={handleSubmit} style={styles.button}>
+              Submit
+            </button>
+            <p
+              style={styles.suggestion}
+              onClick={() =>
+                setInputValue(
+                  trait.suggestions[
+                    Math.floor(Math.random() * trait.suggestions.length)
+                  ]
+                )
+              }
+            >
+              Think of one for me°•💭
+            </p>
+          </div>
+        </motion.div>
+      ) : (
+        <div
+          style={{
+            backgroundColor: "black",
+            display: "flex",
+            height: "100vh",
+            width: "100vw",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#aaa",
+            fontFamily: "Syne Mono, sans-serif",
+          }}
+        >
+          <div
+            style={{
+              color: "white",
+              fontFamily: "Xanh Mono, sans-serif",
+              padding: "1vh",
+            }}
+          >
+            Your {type} has been submitted
+          </div>
+          Waiting for other players{" "}
+        </div>
+      )}
     </div>
   );
 };

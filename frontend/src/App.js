@@ -8,9 +8,9 @@ import Homepage from "./Pages/Homepage";
 function App() {
   return (
     <div className="App">
-      {/* <HeadToHead title="Would you like to go on a date?"/> */}
+      <HeadToHead title="Would you like to go on a date?"/>
       {/* <Brainstorm title="Virtues"/> */}
-      <Homepage />
+      {/* <Homepage /> */}
 
       {/* <Character
         tidbit={"Frames his first earned dollar in home office"}
