@@ -1,6 +1,25 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
+  const navigate = useNavigate();
+
+  const createGame = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/game/create", {
+        method: "POST",
+      });
+      const game = await res.json();
+      if (res.ok && game.code) {
+        navigate(`/waiting/${game.code}`);
+      } else {
+        console.error("failed to create game:", game);
+      }
+    } catch (err) {
+      console.error("error creating game:", err);
+    }
+  };
+
   const containerStyle = {
     position: "relative",
     width: "100vw",
@@ -44,6 +63,7 @@ const Homepage = () => {
         <img src="/img/home.png" alt="Title Screen" style={imageStyle} />
         <button
           style={buttonStyle}
+          onClick={createGame}
           onMouseEnter={(e) => (e.target.style.transform = "translate(-50%, -50%) scale(1.05)")}
           onMouseLeave={(e) => (e.target.style.transform = "translate(-50%, -50%)")}
         >

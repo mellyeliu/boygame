@@ -1,49 +1,54 @@
 const { Sequelize, DataTypes } = require("sequelize");
-
-const environment = process.env.NODE_ENV || "development";
-const isTest = environment === "test";
+const isTest = process.env.NODE_ENV === "test";
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: isTest ? ":memory:" : "game.db",
+  storage: "game.db",
   logging: isTest ? false : console.log,
 });
 
 const Room = sequelize.define("Room", {
   code: { type: DataTypes.STRING, unique: true, allowNull: false },
+  phase: { type: DataTypes.STRING, defaultValue: "LOBBY" },
+  round: { type: DataTypes.INTEGER, defaultValue: 0 },
 });
 
 const Player = sequelize.define("Player", {
   name: { type: DataTypes.STRING, allowNull: false },
-  score: { type: DataTypes.INTEGER, defaultValue: 0 },
-});
-
-const Fact = sequelize.define("Fact", {
-  category: {
-    type: DataTypes.ENUM("virtue", "vice", "trade", "tidbit"),
-    allowNull: false,
-  },
-  value: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+  isVip: { type: DataTypes.BOOLEAN, defaultValue: false },
+  picture: { type: DataTypes.STRING },
+  loveQuote: { type: DataTypes.STRING },
 });
 
 const Boy = sequelize.define("Boy", {
-  name: { type: DataTypes.STRING, allowNull: false },
+  name: { type: DataTypes.STRING },
+  picture: { type: DataTypes.STRING },
+  votes: { type: DataTypes.INTEGER, defaultValue: 0 },
+  isUsed: { type: DataTypes.INTEGER, defaultValue: 0 },
+  isWinner: { type: DataTypes.INTEGER, defaultValue: 0 },
 });
+
+const Trait = sequelize.define("Trait", {
+  type: { type: DataTypes.ENUM("virtue", "vice", "tidbit", "trade"), allowNull: false },
+  text: { type: DataTypes.STRING, allowNull: false },
+  isUsed: { type: DataTypes.BOOLEAN, defaultValue: false },
+});
+
+const BoyTrait = sequelize.define("BoyTrait", {});
 
 Room.hasMany(Player);
 Player.belongsTo(Room);
 
-Player.hasMany(Fact, { as: "authoredFacts" });
-Fact.belongsTo(Player, { as: "author" });
+Room.hasMany(Boy);
+Boy.belongsTo(Room);
 
-Boy.hasMany(Fact);
-Fact.belongsTo(Boy);
+Player.hasMany(Boy);
+Boy.belongsTo(Player);
 
-async function initDb() {
-  await sequelize.sync();
-}
+Player.hasMany(Trait);
+Trait.belongsTo(Player);
 
-module.exports = { sequelize, Room, Player, Fact, Boy, initDb };
+Boy.belongsToMany(Trait, { through: BoyTrait });
+Trait.belongsToMany(Boy, { through: BoyTrait });
+
+module.exports = { sequelize, Room, Player, Boy, Trait, BoyTrait };
