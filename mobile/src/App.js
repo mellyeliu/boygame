@@ -5,6 +5,7 @@ import CharacterComposer from "./Components/Pages/CharacterComposer";
 import { useMediaQuery } from "react-responsive";
 import DesktopScreen from "./Components/Pages/Desktop";
 import JoinGame from "./Components/Pages/JoinGame";
+import HeadToHead from "./Components/Pages/HeadToHead";
 
 function App() {
   const isMobile = useMediaQuery({
@@ -14,7 +15,7 @@ function App() {
   console.log(isMobile);
   return (
     <div className="App">
-      <JoinGame />
+      <HeadToHead />
       {/* {isMobile ? <TraitComposer type="Virtue" /> : <DesktopScreen />} */}
       {/* {isMobile ? <CharacterComposer /> : <DesktopScreen />} */}
       {/* <CharacterComposer /> */}
