@@ -5,6 +5,7 @@ import InnerShadowText from "../Components/InnerShadowText";
 const Homepage = () => {
   const navigate = useNavigate();
   const [roomCode, setRoomCode] = useState("");
+  const [activeRect, setActiveRect] = useState(-1); // -1 means none active
 
   useEffect(() => {
     // Check if we already have a room code in localStorage
@@ -18,6 +19,37 @@ const Homepage = () => {
       createGame();
     }
   }, []);
+
+  // Animation effect for rectangles
+  useEffect(() => {
+    if (!roomCode || roomCode.length !== 4) return;
+    let current = 0;
+    let timeout;
+    let running = true;
+
+    const animate = () => {
+      setActiveRect(current);
+      if (current < 3) {
+        timeout = setTimeout(() => {
+          current += 1;
+          animate();
+        }, 350); // 0.35s between each (slower)
+      } else {
+        // After last, clear highlight and pause for 3s
+        setTimeout(() => setActiveRect(-1), 350);
+        timeout = setTimeout(() => {
+          current = 0;
+          animate();
+        }, 3000);
+      }
+    };
+    animate();
+    return () => {
+      running = false;
+      clearTimeout(timeout);
+      setActiveRect(-1);
+    };
+  }, [roomCode]);
 
   const createGame = async () => {
     try {
@@ -81,6 +113,8 @@ const Homepage = () => {
     },
     roomCodeSquare: (index) => {
       const shadowColors = ["#FFBED8", "#BC88FF", "#73C0FF", "#A7FFD4"];
+      const isActive = activeRect === index;
+      const shadowAlpha = isActive ? "100" : "80"; // more intense when active
       const baseStyle = {
         width: "17vh",
         height: "11vh",
@@ -90,32 +124,34 @@ const Homepage = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "8vh",
+        fontSize: "10vh",
         fontFamily: "Syne Mono, sans-serif",
         fontWeight: 100,
         boxShadow:
           "inset 5px -5px 5px " +
           shadowColors[index] +
-          "80, inset 5px 5px 5px #000000B3",
+          shadowAlpha +
+          ", inset 5px 5px 5px #000000B3",
         position: "relative",
+        transition: "transform 0.7s cubic-bezier(.4,2,.6,1)",
+        transform: isActive ? "scale(1.05)" : "scale(1)",
       };
-
       // Stagger positioning
       switch (index) {
-        case 0: // First square - base position
+        case 0:
           return { ...baseStyle, top: "0", left: "45px" };
-        case 1: // Second square - 30px higher, 30px overlap
+        case 1:
           return { ...baseStyle, top: "-30px", left: "15px" };
-        case 2: // Third square - 30px lower, 30px overlap to second
+        case 2:
           return { ...baseStyle, top: "30px", left: "-15px" };
-        case 3: // Fourth square - same height as first
+        case 3:
           return { ...baseStyle, top: "0", left: "-45px" };
         default:
           return baseStyle;
       }
     },
     button: {
-      padding: "1.8vh 4vh",
+      padding: "1.7vh 3vh",
       backgroundColor: "#3B3B3B",
       color: "white",
       border: "1px solid #808080",
