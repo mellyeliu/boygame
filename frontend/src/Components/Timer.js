@@ -5,6 +5,7 @@ const CountdownCircle = ({
   sizeVH = 6, // Size as a percentage of viewport height
   color = "black",
   backgroundColor = "#ccc",
+  onComplete,
 }) => {
   const [timeLeft, setTimeLeft] = useState(duration);
 
@@ -22,6 +23,9 @@ const CountdownCircle = ({
       setTimeLeft((prev) => {
         if (prev <= 0) {
           clearInterval(timer);
+          if (onComplete) {
+            onComplete();
+          }
           return 0;
         }
         return prev - 1;
@@ -29,7 +33,7 @@ const CountdownCircle = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [duration]);
+  }, [duration, onComplete]);
 
   return (
     <div style={{ position: "relative", width: size, height: size }}>

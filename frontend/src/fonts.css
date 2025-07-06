@@ -1,4 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Syne+Mono&family=Xanh+Mono:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne+Mono:ital,wght@0,100;0,300;0,400&family=Xanh+Mono:ital@0;1&display=swap");
+
+.syne-mono-thin {
+  font-family: "Syne Mono", monospace;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.syne-mono-light {
+  font-family: "Syne Mono", monospace;
+  font-weight: 300;
+  font-style: normal;
+}
 
 .syne-mono-regular {
   font-family: "Syne Mono", monospace;

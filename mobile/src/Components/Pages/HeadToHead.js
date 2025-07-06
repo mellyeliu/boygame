@@ -37,7 +37,7 @@ const PickYourFaveBoy = () => {
       position: "absolute",
       width: "200px",
       transformOrigin: "center",
-      borderRadius: "12px",
+      borderRadius: "6px",
       overflow: "hidden",
       ...(index === 0
         ? { top: "17%", left: "10%" }
@@ -88,10 +88,12 @@ const PickYourFaveBoy = () => {
                     scale: activeIndex === index ? 0.94 : 1,
                     boxShadow:
                       activeIndex === index
-                        ? "0 0 18px 4px rgba(255, 0, 200, 0.8)"
+                        ? "0 0 14.58px rgba(255, 51, 124, 0.8)"
                         : "0 0 5px rgba(0,0,0,0.3)",
                     border:
-                      activeIndex === index ? "3px solid white" : "0px solid white",
+                      activeIndex === index
+                        ? "3px solid white"
+                        : "0px solid white",
                     transform: `rotate(${rotations[index]}deg)`,
                     borderRadius: "12px",
                   }}
@@ -122,18 +124,18 @@ const PickYourFaveBoy = () => {
           </AnimatePresence>
         </div>
       ) : (
-        <div style={{backgroundColor: "black"}}>
-        <motion.div
-          style={styles.blackScreen}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2 }}
-        >
-          <div style={{ color: "white", padding: "1vh" }}>
-            Your boy has been submitted
-          </div>
-          Waiting for other players
-        </motion.div>
+        <div style={{ backgroundColor: "black" }}>
+          <motion.div
+            style={styles.blackScreen}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2 }}
+          >
+            <div style={{ color: "white", padding: "1vh" }}>
+              Your boy has been submitted
+            </div>
+            Waiting for other players
+          </motion.div>
         </div>
       )}
     </>
